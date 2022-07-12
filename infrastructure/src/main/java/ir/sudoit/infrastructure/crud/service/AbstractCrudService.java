@@ -2,9 +2,9 @@ package ir.sudoit.infrastructure.crud.service;
 
 import ir.sudoit.infrastructure.crud.persistence.dto.CrudRequest;
 import ir.sudoit.infrastructure.crud.persistence.dto.CrudResponse;
-import ir.sudoit.infrastructure.crud.persistence.model.IdentifiableEntity;
-import ir.sudoit.infrastructure.crud.persistence.model.EntityEvent;
 import ir.sudoit.infrastructure.crud.persistence.mapper.CrudMapper;
+import ir.sudoit.infrastructure.crud.persistence.model.EntityEvent;
+import ir.sudoit.infrastructure.crud.persistence.model.IdentifiableEntity;
 import ir.sudoit.infrastructure.crud.persistence.repositories.CrudRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ir.sudoit.infrastructure.crud.utility.CrudUtils.copyNonNullProperties;
-
 @Transactional
 public abstract class AbstractCrudService<T extends IdentifiableEntity<ID>, ID extends Serializable, Q extends CrudRequest, S extends CrudResponse<ID>> implements CrudService<T, ID, Q, S> {
 

@@ -15,5 +15,8 @@
         <module>
             infrastructure
         </module>
+        <module>
+            core
+        </module>
     </modules>
 </project>
