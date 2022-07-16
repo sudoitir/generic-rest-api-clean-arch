@@ -1,12 +1,11 @@
 package ir.sudoit.infrastructure.crud.persistence.mapper;
 
-import ir.sudoit.infrastructure.crud.persistence.dto.CrudRequest;
-import ir.sudoit.infrastructure.crud.persistence.dto.CrudResponse;
-import ir.sudoit.infrastructure.crud.persistence.model.IdentifiableEntity;
+import ir.sudoit.core.crud.model.IdentifiableModel;
+import ir.sudoit.core.crud.port.dto.CrudRequest;
+import ir.sudoit.core.crud.port.dto.CrudResponse;
 import org.mapstruct.MapperConfig;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
-import org.springframework.lang.NonNull;
 
 import java.io.Serializable;
 
@@ -21,33 +20,14 @@ import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         componentModel = "spring"
 )
-public interface CrudMapper<T extends IdentifiableEntity<ID>, ID extends Serializable, Q extends CrudRequest, S extends CrudResponse<ID>> {
+public interface CrudMapper<T extends IdentifiableModel<ID>, ID extends Serializable, Q extends CrudRequest, S extends CrudResponse> {
 
-    /**
-     * Maps an input (request) DTO to the related entity to be created.
-     *
-     * @param request input (request) DTO, must not be {@code null}
-     * @return related entity, never be {@code null}
-     */
-    @NonNull
-    T toCreate(@NonNull Q request);
 
-    /**
-     * Maps an input (request) DTO to the related entity to be updated.
-     *
-     * @param request input (request) DTO, must not be {@code null}
-     * @param target  updated entity, must not be {@code null}
-     * @return updated entity, never be {@code null}
-     */
-    @NonNull
-    T toUpdate(@NonNull Q request, @MappingTarget @NonNull T target);
+    T toCreate(Q request);
 
-    /**
-     * Maps an entity to the related output (response) DTO.
-     *
-     * @param entity must not be {@code null}
-     * @return output (response) DTO, never be {@code null}
-     */
-    @NonNull
-    S toResponse(@NonNull T entity);
+
+    T toUpdate(Q request, @MappingTarget T target);
+
+
+    S toResponse(T entity);
 }

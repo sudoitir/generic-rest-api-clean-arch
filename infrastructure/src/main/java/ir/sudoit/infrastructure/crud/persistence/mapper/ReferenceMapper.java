@@ -1,6 +1,6 @@
 package ir.sudoit.infrastructure.crud.persistence.mapper;
 
-import ir.sudoit.infrastructure.crud.persistence.model.IdentifiableEntity;
+import ir.sudoit.core.crud.model.IdentifiableModel;
 import ir.sudoit.infrastructure.crud.persistence.repositories.BaseRepo;
 import org.springframework.lang.NonNull;
 
@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 @FunctionalInterface
-public interface ReferenceMapper<T extends IdentifiableEntity<ID>, ID extends Serializable> {
+public interface ReferenceMapper<T extends IdentifiableModel<ID>, ID extends Serializable> {
 
     @NonNull
     BaseRepo<T, ID> getRepo();
