@@ -1,10 +1,12 @@
 package ir.sudoit.infrastructure.crud.persistence.model;
 
+import ir.sudoit.core.crud.model.IdentifiableModel;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-public record EntityEvent<T extends IdentifiableEntity<ID>, ID extends Serializable>(T entity) implements Serializable {
+public record EntityEvent<T extends IdentifiableModel<ID>, ID extends Serializable>(T entity) implements Serializable {
 
 
     @Serial

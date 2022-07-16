@@ -1,6 +1,6 @@
 package ir.sudoit.infrastructure.crud.persistence.repositories;
 
-import ir.sudoit.infrastructure.crud.persistence.model.IdentifiableEntity;
+import ir.sudoit.core.crud.model.IdentifiableModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-public interface CrudRepo<T extends IdentifiableEntity<ID>, ID extends Serializable> {
+public interface CrudRepo<T extends IdentifiableModel<ID>, ID extends Serializable> {
 
     @NonNull T create(@NonNull T entity);
 

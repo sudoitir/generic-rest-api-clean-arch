@@ -1,17 +1,14 @@
 package ir.sudoit.infrastructure.crud.service;
 
-import ir.sudoit.infrastructure.crud.persistence.dto.CrudRequest;
-import ir.sudoit.infrastructure.crud.persistence.dto.CrudResponse;
-import ir.sudoit.infrastructure.crud.persistence.model.IdentifiableEntity;
-import ir.sudoit.infrastructure.crud.persistence.model.EntityEvent;
+import ir.sudoit.core.crud.model.IdentifiableModel;
+import ir.sudoit.core.crud.port.dto.CrudRequest;
+import ir.sudoit.core.crud.port.dto.CrudResponse;
+import ir.sudoit.core.crud.port.out.CrudService;
 import ir.sudoit.infrastructure.crud.persistence.mapper.CrudMapper;
+import ir.sudoit.infrastructure.crud.persistence.model.EntityEvent;
 import ir.sudoit.infrastructure.crud.persistence.repositories.CrudRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,9 +18,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ir.sudoit.infrastructure.crud.utility.CrudUtils.copyNonNullProperties;
-
 @Transactional
-public abstract class AbstractCrudService<T extends IdentifiableEntity<ID>, ID extends Serializable, Q extends CrudRequest, S extends CrudResponse<ID>> implements CrudService<T, ID, Q, S> {
+public abstract class AbstractCrudService<T extends IdentifiableModel<ID>, ID extends Serializable, Q extends CrudRequest, S extends CrudResponse> implements CrudService<T, ID, Q, S> {
 
     protected final CrudRepo<T, ID> repo;
     protected final CrudMapper<T, ID, Q, S> mapper;
@@ -117,36 +113,7 @@ public abstract class AbstractCrudService<T extends IdentifiableEntity<ID>, ID e
         return repo.getAll().stream().map(mapper::toResponse).collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    @NonNull
-    @Override
-    public Page<T> getAllT(final Pageable pageable) {
-        return repo.getAll(pageable);
-    }
 
-    @Transactional(readOnly = true)
-    @NonNull
-    @Override
-    public Page<S> getAll(final Pageable pageable) {
-//		return repo.getAll(pageable).map(mapper::toResponse); // works in SB 2.0+
-        Page<T> page = repo.getAll(pageable);
-        List<S> content = page.getContent().stream().map(mapper::toResponse).collect(Collectors.toList());
-        return new PageImpl<>(content, pageable, page.getTotalElements());
-    }
-
-    @Transactional(readOnly = true)
-    @NonNull
-    @Override
-    public List<T> getAllT(final Sort sort) {
-        return repo.getAll(sort);
-    }
-
-    @Transactional(readOnly = true)
-    @NonNull
-    @Override
-    public List<S> getAll(final Sort sort) {
-        return repo.getAll(sort).stream().map(mapper::toResponse).collect(Collectors.toList());
-    }
 
     protected String[] ignoredProps() {
         return new String[]{"id", "version", "createdAt", "updatedAt"};
