@@ -1,5 +1,6 @@
 package ir.sudoit.core.crud.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,15 +14,15 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public abstract class UuidIdModel extends BaseModel<UUID>{
-
+    @JsonIgnore
     private UUID id;
-
+    @JsonIgnore
     private LocalDateTime createdDate;
-
+    @JsonIgnore
     private LocalDateTime updatedDate;
-
+    @JsonIgnore
     private Boolean isDeleted = Boolean.FALSE;
-
+    @JsonIgnore
     private Long version;
 
     @Override

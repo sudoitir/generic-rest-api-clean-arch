@@ -1,5 +1,6 @@
 package ir.sudoit.core.crud.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,14 +13,16 @@ import java.util.Objects;
 @NoArgsConstructor
 public abstract class LongIdModel extends BaseModel<Long> {
 
+    @JsonIgnore
     private Long id;
 
+    @JsonIgnore
     private LocalDateTime createdDate;
-
+    @JsonIgnore
     private LocalDateTime updatedDate;
-
+    @JsonIgnore
     private Boolean isDeleted = Boolean.FALSE;
-
+    @JsonIgnore
     private Long version;
 
 
