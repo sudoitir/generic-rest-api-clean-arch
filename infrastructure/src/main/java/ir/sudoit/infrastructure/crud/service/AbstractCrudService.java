@@ -27,6 +27,10 @@ public abstract class AbstractCrudService<T extends IdentifiableModel<ID>, ID ex
     protected final CrudRepo<T, ID> repo;
     protected final CrudMapper<T, ID, Q, S> mapper;
 
+    private static final String NOT_FOUND_CODE = "not_found_error_code";
+    private static final String NOT_FOUND_MESSAGE = "not_found_error_message";
+
+
     @Autowired
     protected PropertiesConfig propertiesConfig;
     @Autowired
@@ -68,8 +72,8 @@ public abstract class AbstractCrudService<T extends IdentifiableModel<ID>, ID ex
             EntityEvent<T, ID> event = onUpdateEvent(entity);
             if (event != null) publisher.publishEvent(event);
             return entity;
-        }).orElseThrow(() -> new NotFoundException(propertiesConfig.getResult("not_found_error_code"),
-                propertiesConfig.getResult("not_found_error_message")));
+        }).orElseThrow(() -> new NotFoundException(propertiesConfig.getResult(NOT_FOUND_CODE),
+                propertiesConfig.getResult(NOT_FOUND_MESSAGE)));
     }
 
     @NonNull
@@ -79,8 +83,8 @@ public abstract class AbstractCrudService<T extends IdentifiableModel<ID>, ID ex
             EntityEvent<T, ID> event = onUpdateEvent(entity);
             if (event != null) publisher.publishEvent(event);
             return mapper.toResponse(entity);
-        }).orElseThrow(() -> new NotFoundException(propertiesConfig.getResult("not_found_error_code"),
-                propertiesConfig.getResult("not_found_error_message")));
+        }).orElseThrow(() -> new NotFoundException(propertiesConfig.getResult(NOT_FOUND_CODE),
+                propertiesConfig.getResult(NOT_FOUND_MESSAGE)));
     }
 
     @Override
@@ -106,11 +110,11 @@ public abstract class AbstractCrudService<T extends IdentifiableModel<ID>, ID ex
     public S getOne(@NonNull final ID id) {
         try {
             return getOneT(id).map(mapper::toResponse)
-                    .orElseThrow(() -> new NotFoundException(propertiesConfig.getResult("not_found_error_code"),
-                            propertiesConfig.getResult("not_found_error_message")));
+                    .orElseThrow(() -> new NotFoundException(propertiesConfig.getResult(NOT_FOUND_CODE),
+                            propertiesConfig.getResult(NOT_FOUND_MESSAGE)));
         } catch (EntityNotFoundException e) {
-            throw new NotFoundException(propertiesConfig.getResult("not_found_error_code"),
-                    propertiesConfig.getResult("not_found_error_message"));
+            throw new NotFoundException(propertiesConfig.getResult(NOT_FOUND_CODE),
+                    propertiesConfig.getResult(NOT_FOUND_MESSAGE));
         }
     }
 
@@ -142,6 +146,7 @@ public abstract class AbstractCrudService<T extends IdentifiableModel<ID>, ID ex
     }
 
     protected EntityEvent<T, ID> onCreateEvent(@NonNull T entity) {
+        //TODO: You can create event
         return null;
     }
 
