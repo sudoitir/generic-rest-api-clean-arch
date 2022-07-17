@@ -9,7 +9,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class AccessException extends RuntimeException {
 
-    private final Integer code;
+    private final String code;
 
     private final String message;
 
