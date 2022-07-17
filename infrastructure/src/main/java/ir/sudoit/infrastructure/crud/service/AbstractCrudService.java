@@ -1,9 +1,11 @@
 package ir.sudoit.infrastructure.crud.service;
 
+import ir.sudoit.core.crud.exception.NotFoundException;
 import ir.sudoit.core.crud.model.IdentifiableModel;
 import ir.sudoit.core.crud.port.dto.CrudRequest;
 import ir.sudoit.core.crud.port.dto.CrudResponse;
 import ir.sudoit.core.crud.port.out.CrudService;
+import ir.sudoit.core.crud.utility.PropertiesConfig;
 import ir.sudoit.infrastructure.crud.persistence.mapper.CrudMapper;
 import ir.sudoit.infrastructure.crud.persistence.model.EntityEvent;
 import ir.sudoit.infrastructure.crud.persistence.repositories.CrudRepo;
@@ -15,15 +17,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static ir.sudoit.infrastructure.crud.utility.CrudUtils.copyNonNullProperties;
+
 @Transactional
-public abstract class AbstractCrudService<T extends IdentifiableModel<ID>, ID extends Serializable, Q extends CrudRequest, S extends CrudResponse> implements CrudService<T, ID, Q, S> {
+public abstract class AbstractCrudService<T extends IdentifiableModel<ID>, ID extends Serializable, Q extends CrudRequest, S extends CrudResponse> implements CrudService<T,ID,Q,S> {
 
     protected final CrudRepo<T, ID> repo;
     protected final CrudMapper<T, ID, Q, S> mapper;
 
+    @Autowired
+    protected PropertiesConfig propertiesConfig;
     @Autowired
     protected ApplicationEventPublisher publisher;
 
@@ -58,22 +62,24 @@ public abstract class AbstractCrudService<T extends IdentifiableModel<ID>, ID ex
 
     @NonNull
     @Override
-    public Optional<T> update(final ID id, final T source) {
+    public T update(final ID id, final T source) {
         return repo.update(id, source, (s, t) -> copyNonNullProperties(s, t, ignoredProps())).map(entity -> {
             EntityEvent<T, ID> event = onUpdateEvent(entity);
             if (event != null) publisher.publishEvent(event);
             return entity;
-        });
+        }).orElseThrow(() -> new NotFoundException(propertiesConfig.getResult("not_found_error_code"),
+                propertiesConfig.getResult("not_found_error_message")));
     }
 
     @NonNull
     @Override
-    public Optional<S> update(final ID id, final Q source) {
+    public S update(final ID id, final Q source) {
         return repo.update(id, source, new CallbackMapper<>(mapper::toUpdate, this::onUpdate)).map(entity -> {
             EntityEvent<T, ID> event = onUpdateEvent(entity);
             if (event != null) publisher.publishEvent(event);
             return mapper.toResponse(entity);
-        });
+        }).orElseThrow(() -> new NotFoundException(propertiesConfig.getResult("not_found_error_code"),
+                propertiesConfig.getResult("not_found_error_message")));
     }
 
     @Override
@@ -110,9 +116,8 @@ public abstract class AbstractCrudService<T extends IdentifiableModel<ID>, ID ex
     @NonNull
     @Override
     public List<S> getAll() {
-        return repo.getAll().stream().map(mapper::toResponse).collect(Collectors.toList());
+        return repo.getAll().stream().map(mapper::toResponse).toList();
     }
-
 
 
     protected String[] ignoredProps() {

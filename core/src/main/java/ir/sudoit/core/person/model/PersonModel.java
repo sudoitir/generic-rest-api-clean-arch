@@ -2,6 +2,7 @@ package ir.sudoit.core.person.model;
 
 import ir.sudoit.core.crud.model.LongIdModel;
 import ir.sudoit.core.crud.port.dto.CrudRequest;
+import ir.sudoit.core.crud.port.dto.CrudResponse;
 import lombok.*;
 
 @Getter
@@ -10,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class PersonModel extends LongIdModel implements CrudRequest {
+public class PersonModel extends LongIdModel implements CrudRequest, CrudResponse {
 
     private String name;
 

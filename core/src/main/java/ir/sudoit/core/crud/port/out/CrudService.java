@@ -17,10 +17,10 @@ public interface CrudService<T extends IdentifiableModel<ID>, ID extends Seriali
     T create(T source);
 
 
-    Optional<S> update(ID id, Q source);
+    S update(ID id, Q source);
 
 
-    Optional<T> update(ID id, T source);
+    T update(ID id, T source);
 
 
     boolean delete(ID id);
