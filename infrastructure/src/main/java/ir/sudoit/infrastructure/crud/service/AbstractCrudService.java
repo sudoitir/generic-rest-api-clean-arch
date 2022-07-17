@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,7 @@ import java.util.Optional;
 import static ir.sudoit.infrastructure.crud.utility.CrudUtils.copyNonNullProperties;
 
 @Transactional
-public abstract class AbstractCrudService<T extends IdentifiableModel<ID>, ID extends Serializable, Q extends CrudRequest, S extends CrudResponse> implements CrudService<T,ID,Q,S> {
+public abstract class AbstractCrudService<T extends IdentifiableModel<ID>, ID extends Serializable, Q extends CrudRequest, S extends CrudResponse> implements CrudService<T, ID, Q, S> {
 
     protected final CrudRepo<T, ID> repo;
     protected final CrudMapper<T, ID, Q, S> mapper;
@@ -96,13 +97,21 @@ public abstract class AbstractCrudService<T extends IdentifiableModel<ID>, ID ex
     @Override
     public Optional<T> getOneT(@NonNull final ID id) {
         return Optional.of(repo.getById(id));
+
     }
 
     @Transactional(readOnly = true)
     @NonNull
     @Override
-    public Optional<S> getOne(@NonNull final ID id) {
-        return getOneT(id).map(mapper::toResponse);
+    public S getOne(@NonNull final ID id) {
+        try {
+            return getOneT(id).map(mapper::toResponse)
+                    .orElseThrow(() -> new NotFoundException(propertiesConfig.getResult("not_found_error_code"),
+                            propertiesConfig.getResult("not_found_error_message")));
+        } catch (EntityNotFoundException e) {
+            throw new NotFoundException(propertiesConfig.getResult("not_found_error_code"),
+                    propertiesConfig.getResult("not_found_error_message"));
+        }
     }
 
     @Transactional(readOnly = true)

@@ -26,7 +26,7 @@ public interface CrudService<T extends IdentifiableModel<ID>, ID extends Seriali
     boolean delete(ID id);
 
 
-    Optional<S> getOne(ID id);
+    S getOne(ID id);
 
 
     Optional<T> getOneT(ID id);

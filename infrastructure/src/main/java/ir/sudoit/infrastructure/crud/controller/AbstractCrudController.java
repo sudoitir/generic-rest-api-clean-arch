@@ -67,9 +67,9 @@ public abstract class AbstractCrudController<T extends IdentifiableModel<ID>, ID
 
     @NonNull
     public ResponseEntity<?> getOne(@NonNull final ID id) {
-        return service.getOne(id)
-                .map(ResponseEntity::ok)
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        S one = service.getOne(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApplicationUtilities.toActionResultWithObject(one, propertiesConfig));
     }
 
 
