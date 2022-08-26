@@ -10,8 +10,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@EqualsAndHashCode(callSuper = true)
-public class PersonModel extends LongIdModel implements CrudRequest, CrudResponse {
+@EqualsAndHashCode (callSuper = true)
+public class PersonModel extends LongIdModel implements CrudRequest, CrudResponse
+{
 
     private String name;
 

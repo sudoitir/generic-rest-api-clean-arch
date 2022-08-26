@@ -13,14 +13,15 @@ import static org.mapstruct.NullValueCheckStrategy.ALWAYS;
 import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
-@MapperConfig(
+@MapperConfig (
         nullValueMappingStrategy = RETURN_DEFAULT,
         nullValueCheckStrategy = ALWAYS,
         nullValuePropertyMappingStrategy = IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         componentModel = "spring"
 )
-public interface CrudMapper<T extends IdentifiableModel<ID>, ID extends Serializable, Q extends CrudRequest, S extends CrudResponse> {
+public interface CrudMapper<T extends IdentifiableModel<ID>, ID extends Serializable, Q extends CrudRequest, S extends CrudResponse>
+{
 
 
     T toCreate(Q request);

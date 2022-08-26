@@ -7,5 +7,6 @@ import java.io.Serializable;
 
 @ToString
 @EqualsAndHashCode
-public abstract class BaseModel <T extends Serializable> implements IdentifiableModel<T>{
+public abstract class BaseModel<T extends Serializable> implements IdentifiableModel<T>
+{
 }
